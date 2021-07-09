@@ -12,6 +12,8 @@ const ItemCounter = ({ item }) => {
   const [pending, setPending] = useState(false)
 
   const updateQuantity = async (quantity) => {
+    console.log(item)
+    console.log( 'quantity: ' + quantity)
     let numItemsToAdd = quantity - item.quantity;
     addItem({ ...item, quantity: numItemsToAdd })
   }
@@ -20,6 +22,8 @@ const ItemCounter = ({ item }) => {
   // Once it blurs, then resolve the value that they typed and update the cart
   const handleQuantity = (e) => {
     setQuantity(e.target.value)
+    console.log(e.target)
+    console.log(item)
     setPending(true)
   }
   const handleBlur = () => {

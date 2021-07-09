@@ -16,6 +16,7 @@ const calculateCartTotal = (cartItems) => {
 
 const reducer = (state, action) => {
   let nextCart = [...state.cart];
+  console.log(nextCart)
   switch (action.type) {
     case 'ADD_ITEM':
       const existingIndex = nextCart.findIndex(
@@ -28,6 +29,7 @@ const reducer = (state, action) => {
         const newQuantity = parseInt(
           nextCart[existingIndex].quantity + numItemsToAdd
         )
+        console.log('new quantity: ' + newQuantity)
 
         nextCart[existingIndex] = {
           ...action.payload,
@@ -36,12 +38,15 @@ const reducer = (state, action) => {
       } else {
         nextCart.push(action.payload)
       }
-      console.log(state)
+       
+      let totalQuantity = nextCart.reduce((accumulator, product) => {
+        return accumulator + product.quantity
+      }, 0)
 
       return {
         ...state,
         cart: nextCart,
-        itemCount: state.itemCount + 1,
+        itemCount: totalQuantity,
         cartTotal: calculateCartTotal(nextCart),
       }
     case 'REMOVE_ITEM':
