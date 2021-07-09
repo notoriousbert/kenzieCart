@@ -36,11 +36,13 @@ const reducer = (state, action) => {
       } else {
         nextCart.push(action.payload)
       }
+      console.log(state)
 
       return {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount + 1,
+        cartTotal: calculateCartTotal(nextCart),
       }
     case 'REMOVE_ITEM':
       nextCart = nextCart
