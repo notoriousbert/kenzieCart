@@ -11,7 +11,6 @@ export default function ProductCard({ product }) {
   const { openSidebar } = useUI()
 
   const handleAddToCart = () => {
-    console.log(product)
     openSidebar()
     addItem({ ...product, quantity: 1 })
   }

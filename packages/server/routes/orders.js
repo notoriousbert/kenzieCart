@@ -29,11 +29,18 @@ router
       items: itemIdList,
       orderTotal: orderTotal,
     }
+
+    const newOrder = new Order(orderData)
+
     try {
+
+      await newOrder.save();
+      
       /* create new order using Order model
         and return order ID
       */
-      res.json(orderData)
+
+      res.json(newOrder['_id'])
     } catch (error) {
       next(new Error('Error Placing Order'))
     }

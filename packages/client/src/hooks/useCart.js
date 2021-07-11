@@ -16,7 +16,6 @@ const calculateCartTotal = (cartItems) => {
 
 const reducer = (state, action) => {
   let nextCart = [...state.cart];
-  console.log(nextCart)
   switch (action.type) {
     case 'ADD_ITEM':
       const existingIndex = nextCart.findIndex(
@@ -29,7 +28,6 @@ const reducer = (state, action) => {
         const newQuantity = parseInt(
           nextCart[existingIndex].quantity + numItemsToAdd
         )
-        console.log('new quantity: ' + newQuantity)
 
         nextCart[existingIndex] = {
           ...action.payload,
@@ -155,6 +153,7 @@ const useProvideCart = () => {
     removeAllItems,
     resetCart,
     isItemInCart,
+    calculateCartTotal,
   }
 }
 
