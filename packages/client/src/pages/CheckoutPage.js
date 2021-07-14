@@ -14,7 +14,7 @@ const initialState = {
 export default function CheckoutPage(props) {
   const [data, setData] = useState(initialState)
   const [confirmationNumber, setConfirmationNumber] = useState('')
-  const { state, resetCart, calculateCartTotal } = useProvideCart()
+  const { state, resetCart, calculateCartTotal, deleteLocalStorage } = useProvideCart()
 
   const placeOrder = async (orderFormData) => {
     let orderData = {
@@ -31,6 +31,7 @@ export default function CheckoutPage(props) {
       const orderConfirmation = await createOrder(orderData)
       toast('Order Placed Successfully')
       resetCart()
+      deleteLocalStorage()
       setData({
         isSubmitting: false,
         isConfirmed: true,

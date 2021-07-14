@@ -9,7 +9,12 @@ import { ItemCounter } from 'components'
 
 export default function CartItem({ item }) {
   const { closeSidebar } = useUI()
-  const { removeAllItems } = useProvideCart()
+  const { removeAllItems, updateCart } = useProvideCart()
+
+  const handleRemoveAllItems = (itemId) => {
+    removeAllItems(itemId)
+    updateCart()
+  }
 
   return (
     <div className='item-box'>
@@ -35,7 +40,8 @@ export default function CartItem({ item }) {
               <Button
                 aria-label={`remove ${item.name} from cart`}
                 className='hover:text-gray-500 transition ease-in-out duration-150'
-                onClick={() => removeAllItems(item._id)}
+                onClick={() => handleRemoveAllItems(item._id)}
+
               >
                 <FontAwesomeIcon size='xs' icon={faTrash} />
               </Button>

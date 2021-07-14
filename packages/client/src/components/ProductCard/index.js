@@ -7,12 +7,13 @@ import { useProvideCart, useUI } from 'hooks'
 import './ProductCard.scss'
 
 export default function ProductCard({ product }) {
-  const { addItem, isItemInCart } = useProvideCart()
+  const { addItem, isItemInCart, updateCart } = useProvideCart()
   const { openSidebar } = useUI()
 
   const handleAddToCart = () => {
     openSidebar()
     addItem({ ...product, quantity: 1 })
+    updateCart()
   }
 
   return (

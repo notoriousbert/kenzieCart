@@ -8,17 +8,19 @@ import './ProductBox.scss'
 
 export default function ProductBox({ product }) {
   const { openSidebar } = useUI()
-  const { addItem, removeItem, isItemInCart } = useProvideCart()
+  const { addItem, removeItem, isItemInCart, updateCart } = useProvideCart()
 
   const handleAddToCart = () => {
     console.log(product)
 
     openSidebar()
     addItem({ ...product, quantity: 1 })
+    updateCart()
   }
 
   const handleRemoveFromCart = () => {
     removeItem(product._id)
+    updateCart()
   }
 
   return (
