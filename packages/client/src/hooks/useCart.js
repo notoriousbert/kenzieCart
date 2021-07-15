@@ -32,7 +32,6 @@ const reducer = (state, action) => {
 
   switch (action.type) {
     case "ADD_ITEM":
-      console.log(nextCart)
       const existingIndex = nextCart.findIndex(
         (item) => item._id === action.payload._id
       );
