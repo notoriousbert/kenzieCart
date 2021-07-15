@@ -4,14 +4,17 @@ const initialState = {
   cart: [],
   itemCount: 0,
   cartTotal: 0,
+  promoCode: "",
+  discount: 0,
+  couponId: "",
 };
 
 const calculateCartQuantity = (cartItems) => {
   let totalQuantity = cartItems.reduce((accumulator, product) => {
-    return accumulator + product.quantity
-  }, 0)
-  return totalQuantity
-}
+    return accumulator + product.quantity;
+  }, 0);
+  return totalQuantity;
+};
 
 const calculateCartTotal = (cartItems) => {
   let total = 0;
@@ -49,19 +52,35 @@ const reducer = (state, action) => {
       } else {
         nextCart.push(action.payload);
       }
-      // localStorage.setItem("KenzieCart", JSON.stringify(nextCart));
       return {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount + numItemsToAdd,
-        cartTotal: calculateCartTotal(nextCart),
+        cartTotal: calculateCartTotal(nextCart) * (1 - state.discount),
+      };
+
+    case "APPLY_PROMO_CODE":
+      const preDiscountedTotal = calculateCartTotal(nextCart);
+      const discountedTotal =
+        preDiscountedTotal * (1 - action.payload.discount);
+      return {
+        ...state,
+        cartTotal: discountedTotal,
+        promoCode: action.payload.code,
+        discount: action.payload.discount,
+        couponId: action.payload._id
       };
     case "DELETE_CART_STORAGE":
-      localStorage.removeItem('KenzieCart');
+      localStorage.removeItem("KenzieCart");
       return { ...initialState };
     case "INIT_SAVED_CART":
       localStorage.setItem("KenzieCart", JSON.stringify(action.payload));
-      return { ...state, cart: action.payload, itemCount: calculateCartQuantity(action.payload), cartTotal: calculateCartTotal(action.payload), };
+      return {
+        ...state,
+        cart: action.payload,
+        itemCount: calculateCartQuantity(action.payload),
+        cartTotal: calculateCartTotal(action.payload) * (1 - state.discount),
+      };
     case "REMOVE_ITEM":
       nextCart = nextCart
         .map((item) =>
@@ -75,7 +94,7 @@ const reducer = (state, action) => {
         ...state,
         cart: nextCart,
         itemCount: state.itemCount > 0 ? state.itemCount - 1 : 0,
-        cartTotal: calculateCartTotal(nextCart),
+        cartTotal: calculateCartTotal(nextCart) * (1 - state.discount),
       };
     case "REMOVE_ALL_ITEMS":
       let quantity = state.cart.find((i) => i._id === action.payload).quantity;
@@ -129,6 +148,13 @@ const useProvideCart = () => {
     });
   };
 
+  const applyCoupon = (promoData) => {
+    dispatch({
+      type: "APPLY_PROMO_CODE",
+      payload: promoData,
+    });
+  };
+
   const deleteLocalStorage = () => {
     dispatch({
       type: "DELETE_CART_STORAGE",
@@ -173,7 +199,6 @@ const useProvideCart = () => {
         type: "INIT_SAVED_CART",
         payload: savedCart,
       });
-      
     }
   }, []);
 
@@ -186,7 +211,8 @@ const useProvideCart = () => {
     isItemInCart,
     calculateCartTotal,
     updateCart,
-    deleteLocalStorage
+    deleteLocalStorage,
+    applyCoupon,
   };
 };
 
