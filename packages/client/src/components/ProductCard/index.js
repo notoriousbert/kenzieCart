@@ -3,16 +3,18 @@ import { Link } from 'react-router-dom'
 import { Container, Row, Col, Card } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingBag } from '@fortawesome/free-solid-svg-icons/faShoppingBag'
-import { useProvideCart, useUI } from 'hooks'
+import { useCurrency, useProvideCart, useUI } from 'hooks'
 import './ProductCard.scss'
 
 export default function ProductCard({ product }) {
-  const { addItem, isItemInCart } = useProvideCart()
+  const { addItem, isItemInCart, updateCart } = useProvideCart()
   const { openSidebar } = useUI()
+  const { getPrice } = useCurrency()
 
   const handleAddToCart = () => {
     openSidebar()
     addItem({ ...product, quantity: 1 })
+    updateCart()
   }
 
   return (
@@ -37,7 +39,7 @@ export default function ProductCard({ product }) {
                 <Link to={`p/${product._id}`}>{product.name}</Link>
               </Col>
               <Col className='text-right font-weight-bold'>
-                ${product.price}
+                {getPrice(product.price)}
               </Col>
             </Row>
           </Card.Title>

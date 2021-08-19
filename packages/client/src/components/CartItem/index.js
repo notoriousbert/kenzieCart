@@ -3,13 +3,19 @@ import { Link } from 'react-router-dom'
 import { Container, Row, Col, Button, Image } from 'react-bootstrap'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import { useUI, useProvideCart } from 'hooks'
+import { useUI, useProvideCart, useCurrency } from 'hooks'
 import './CartItem.scss'
 import { ItemCounter } from 'components'
 
 export default function CartItem({ item }) {
   const { closeSidebar } = useUI()
-  const { removeAllItems } = useProvideCart()
+  const { removeAllItems, updateCart } = useProvideCart()
+  const { getPrice } = useCurrency()
+
+  const handleRemoveAllItems = (itemId) => {
+    removeAllItems(itemId)
+    updateCart()
+  }
 
   return (
     <div className='item-box'>
@@ -35,7 +41,8 @@ export default function CartItem({ item }) {
               <Button
                 aria-label={`remove ${item.name} from cart`}
                 className='hover:text-gray-500 transition ease-in-out duration-150'
-                onClick={() => removeAllItems(item._id)}
+                onClick={() => handleRemoveAllItems(item._id)}
+
               >
                 <FontAwesomeIcon size='xs' icon={faTrash} />
               </Button>
@@ -46,7 +53,7 @@ export default function CartItem({ item }) {
               <p className='item-label'>price</p>
             </Col>
             <Col xs='3' className='text-right'>
-              <p className='price item-value'>{` $${item.price}`}</p>
+              <p className='price item-value'>{` ${getPrice(item.price)}`}</p>
             </Col>
           </Row>
           <Row className='mb-2 align-items-center'>
