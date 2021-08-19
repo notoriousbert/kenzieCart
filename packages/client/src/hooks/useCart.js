@@ -36,11 +36,16 @@ const reducer = (state, action) => {
       } else {
         nextCart.push(action.payload)
       }
+       
+      let totalQuantity = nextCart.reduce((accumulator, product) => {
+        return accumulator + product.quantity
+      }, 0)
 
       return {
         ...state,
         cart: nextCart,
-        itemCount: state.itemCount + 1,
+        itemCount: totalQuantity,
+        cartTotal: calculateCartTotal(nextCart),
       }
     case 'REMOVE_ITEM':
       nextCart = nextCart
@@ -148,6 +153,7 @@ const useProvideCart = () => {
     removeAllItems,
     resetCart,
     isItemInCart,
+    calculateCartTotal,
   }
 }
 
